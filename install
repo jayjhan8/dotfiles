@@ -15,8 +15,6 @@ for bin in $BASE/bin/; do
   ln -svf "$bin" ~/bin
 done
 
-
-
 # Homebrew
 if [ "$(uname -s)" = 'Darwin' ]; then
   # Homebrew
@@ -36,6 +34,13 @@ fi
 # Global Git Config
 git config --global user.email "jayjhan8@gmail.com"
 git config --global user.name "Jayzz"
+
+# Install powerline
+git clone https://github.com/powerline/fonts.git --depth=1
+pushd fonts
+./install.sh
+popd
+rm -rf fonts
 
 tmux source-file ~/.tmux.conf
 ./install-alacritty
