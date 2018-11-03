@@ -5,7 +5,7 @@ BASE=$(pwd)
 
 export GIT_SSL_NO_VERIFY=true
 ALACRITTY_HOME="~/.alacritty"
-if [ ! -d "~/$ALACRITTY_HOME" ]; then
+if [ ! -d "$ALACRITTY_HOME" ]; then
     echo '--Downloading alacritty'
     mkdir -p ~/.alacritty
     git clone https://github.com/jwilm/alacritty.git ~/.alacritty
