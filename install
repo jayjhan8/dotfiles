@@ -2,7 +2,7 @@ cd "$(dirname "${BASH_SOURCE[0]}")" || exit 1
 BASE=$(pwd)
 
 # My RCs
-for rc in tmux.conf gitconfig bash_profile bashrc; do
+for rc in alacritty.yml tmux.conf gitconfig bash_profile bashrc; do
   mkdir -pv backup
   [ -e ~/."$rc" ] && mv -v ~/."$rc" backup/."$rc"
   ln -sfv "$BASE/$rc" ~/."$rc"
@@ -38,4 +38,5 @@ git config --global user.email "jayjhan8@gmail.com"
 git config --global user.name "Jayzz"
 
 tmux source-file ~/.tmux.conf
+./install-alacritty
 ./install-vim
