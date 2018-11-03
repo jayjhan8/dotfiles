@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH="/Users/jayh/.oh-my-zsh"
+export ZSH="/Users/$USER/.oh-my-zsh"
 
 #zsh-nvm plugin lazy laoding ov nvm
 export NVM_LAZY_LOAD=true
