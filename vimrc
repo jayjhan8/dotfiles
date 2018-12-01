@@ -13,6 +13,7 @@ set showmatch
 set backspace=eol,start,indent
 set hlsearch
 set hidden
+set modeline
 
 " let mapleader = "\<Space>"
 " ============================================================================
@@ -116,15 +117,16 @@ Plug 'vim-scripts/Puppet-Syntax-Highlighting'
 Plug 'vim-scripts/Tabular'
 Plug 'SirVer/ultisnips'
 Plug 'ervandew/supertab'
+Plug 'kchmck/vim-coffee-script'
+Plug 'qpkorr/vim-bufkill', {'on': 'BD'}
 call plug#end()
 " }}} Vim-Plug END
 
-set modeline
 
 colorscheme seoul256
 " NerdTree Config
 map <C-n> :NERDTreeToggle<CR>
-map <C-m> :NERDTreeFind<CR>
+map <C-g> :NERDTreeFind<CR>
 let NERDTreeShowLineNumbers=1
 
 " Tmux config
@@ -143,18 +145,13 @@ let g:tmux_navigator_save_on_switch = 1
 " Buffer Navigation
 nnoremap <silent> [b :bp<cr>
 nnoremap <silent> ]b :bn<cr>
-nnoremap <leader>x :b#<bar>bd# <cr>
+"nnoremap <leader>x :b#<bar>bd# <cr>
+" Buffer cleanup
+nnoremap <leader>x :BD<CR> "Delete the current buffer without closing out the pane
 
 " Location Navigation
 nnoremap <silent> [l :lprev<cr>
 nnoremap <silent> ]l :lnext<cr>
-
-
-
-" CtrlP config
-let g:ctrlp_map = '<c-p>'
-
-
 
 " Python
 let python_highlight_all = 1
@@ -194,9 +191,6 @@ let g:airline_highlighting_cache = 1
 "hi clear cursorline
 "hi CursorLineNr cterm=bold ctermfg=255 ctermbg=13
 
-" ACK
-cnoreabbrev Ack Ack!
-nnoremap <Leader>a :Ack!<Space>
 
 " RIPGREP
 "if executable('rg')
@@ -251,10 +245,12 @@ let g:ale_linters = {'python': ['pylint'],
 			\ 'yaml': ['yamllint'],
 			\ 'scala':[],
 			\ 'markdown': ['remark_lint', 'alex'],
-			\ 'javascript': ['eslint', 'flow'],
+			\ 'javascript': ['eslint' ],
 			\  'typescript': ['prettier', 'tslint', 'tsserver', 'typecheck'],
 			\}
 
+"let g:ale_javascript_eslint_executable='yarn run eslint:client'
+"let g:ale_javascript_eslint_options='--config .eslintrc.client.json'
 "let g:ale_fixers = {'ruby': ['rubocop']}
 let g:ale_lint_delay = 1000
 let g:ale_cache_executable_check_failures = 1
@@ -275,6 +271,9 @@ let g:UltiSnipsEditSplit="vertical"
 let g:ultisnips_python_style='numpy'
 
 " YCM
+let g:ycm_show_diagnostics_ui = 1
+let g:ycm_enable_diagnostic_signs = 0 
+let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_max_diagnostics_to_display = 10 "let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_autoclose_preview_window_after_insertion=1
 let g:ycm_server_python_interpreter = "/usr/local/bin/python3"
@@ -305,9 +304,27 @@ let g:vim_json_syntax_conceal = 0
 
 "" FZF quickaction
 nnoremap <silent> <expr> <c-p> (expand('%') =~ 'NERD_tree' ?"\<c-w>\<c-w>" : '').":GFiles\<cr>"
-nnoremap <silent> <Leader>b  :Buffers<cr>
+"nnoremap <silent> <Leader>b  :Buffers<CR>
+nnoremap <silent> <Leader><Leader>  :Buffers<CR>
 "nnoremap <silent> <Leader>rg  :Rg
 nnoremap <Leader>rg :Rg<Space>
+nnoremap <silent> <Leader>L        :Lines<CR>
+nnoremap <silent> <Leader>`        :Marks<CR>
 
 " look for this word in visual mode
 vnoremap // y/<C-R>"<CR>
+
+
+
+" Always paste with set nopaste in insert mode from system clipboard
+" https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
+let &t_SI .= "\<Esc>[?2004h"
+let &t_EI .= "\<Esc>[?2004l"
+
+inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
+
+function! XTermPasteBegin()
+	set pastetoggle=<Esc>[201~
+	set paste
+	return ""
+endfunction

@@ -1,4 +1,3 @@
 rustup command takes in an input
 
 colorscheme not available, need to enter
-
