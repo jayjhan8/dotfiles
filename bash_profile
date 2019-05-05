@@ -1,5 +1,4 @@
 #!/bin/bash
-
 parse_git_branch() {
     var=$(git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/')
       git branch &> /dev/null
@@ -41,6 +40,7 @@ export GOPATH="$HOME/go"
 #export GOROOT="$HOME/Go"
 export PATH=$PATH:$GOPATH/bin
 
+# Qualtrics Specific
 # gov1 scripts
 alias gov1f5="echo Tunneling to f5 dashboard in gov1 and opening page in browser. You may need to refresh the page for it to show up. && open http://f5dashboard.gov1.qprod.net:9200 && ssh -L 9200:f5dashboard.gov1.qprod.net:80 -N rampart.gov1.qprod.net"
 alias gov1consul="echo Tunneling to consul ui in gov1 and opening page in browser. You may need to refresh the page for it to show up. && open http://consul1-app.gov1.qprod.net:8500/ui && ssh -L 8500:consul1-app.gov1.qprod.net:8500 -N rampart.gov1.qprod.net"
@@ -55,3 +55,24 @@ alias gov1nomadui="echo Tunneling to nomad-ui in gov1 and opening page in browse
 # need a more permanent fix
 alias qnotary="notary -s https://registry-app.eng.qops.net:4443 -d ~/.docker/trust --tlscacert /tmp/jenkins/jenkins.eng.qops.net.crt"
 export PATH="$HOME/.cargo/bin:$PATH"
+
+route_me() {
+    docker pull registry-app.eng.qops.net:5001/tylerc/router:latest
+    docker stop router
+    docker run \
+        -d \
+        --rm \
+        -p 6080:6080 \
+        -p 9443:6443 \
+        -v "/Users/jayh/proj/vocalize/qualtrics-dev-proxy/certs:/Users/jayh/proj/vocalize/qualtrics-dev-proxy/certs" \
+        -e TLS_CERT_FILE="/Users/jayh/proj/vocalize/qualtrics-dev-proxy/certs/cacert.pem" \
+        -e TLS_KEY_FILE="/Users/jayh/proj/vocalize/qualtrics-dev-proxy/certs/cakey.pem" \
+        -e STATWING_URL='http://docker.for.mac.localhost:3003' \
+        --name router \
+        registry-app.eng.qops.net:5001/tylerc/router:latest
+}
+
+export QTOKEN=dnKgzTPNZyEd2Kfop
+export QUALTRICSHOSTNAME=ops.b1-prv.local.jayh
+export SWPROXY_CERTIFICATE_PATH="/Users/jayh/proj/vocalize/qualtrics-dev-proxy/certs"
+export AES_AWS_SECRET_KEY=Qu97altrics*****

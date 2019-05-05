@@ -46,7 +46,7 @@ window:
   #     - none: Neither borders nor title bar
   #     - buttonless: Title bar, transparent background and title bar buttons
   #     - transparent: Title bar, transparent background, but no title bar buttons
-  decorations: full
+  decorations: buttonless
 
 scrolling:
   # Maximum number of lines in the scrollback buffer.
@@ -98,7 +98,7 @@ font:
      #style: Italic
 
   # Point size
-  size: 12.0
+  size: 14.0
 
   # Offset is the extra space around each character. `offset.y` can be thought of
   # as modifying the line spacing, and `offset.x` as modifying the letter spacing.
@@ -113,10 +113,6 @@ font:
     x: 0
     y: 0
 
-  # Scale the font size based on the monitor's DPI. This will lead to bigger text on HiDPI
-  # screens and make reading text a little easier.
-  scale_with_dpi: true
-
   # Thin stroke font rendering (OS X only)
   #
   # Thin strokes are suitable for retina displays, but for non-retina screens
@@ -129,40 +125,68 @@ render_timer: false
 # Use custom cursor colors. If `true`, the `colors.cursor.foreground` and
 # `colors.cursor.background` colors will be used to display the cursor.
 # Otherwise the cell colors are inverted for the cursor.
-custom_cursor_colors: false
+# DEPRECATED
+# custom_cursor_colors: false
 
 # If `true`, bold text is drawn using the bright color variants.
 draw_bold_text_with_bright_colors: true
 
-
-# Colors (Nord)
+# Colors (Seoul256)
 colors:
   # Default colors
   primary:
-    background: '0x2E3440'
-    foreground: '0xD8DEE9'
+    background: '0x3a3a3a'
+    foreground: '0xd0d0d0'
 
   # Normal colors
   normal:
-    black:   '0x3B4252'
-    red:     '0xBF616A'
-    green:   '0xA3BE8C'
-    yellow:  '0xEBCB8B'
-    blue:    '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan:    '0x88C0D0'
-    white:   '0xE5E9F0'
+    black:   '0x4e4e4e'
+    red:     '0xd68787'
+    green:   '0x5f865f'
+    yellow:  '0xd8af5f'
+    blue:    '0x85add4'
+    magenta: '0xd7afaf'
+    cyan:    '0x87afaf'
+    white:   '0xd0d0d0'
 
   # Bright colors
   bright:
-    black:   '0x4C566A'
-    red:     '0xBF616A'
-    green:   '0xA3BE8C'
-    yellow:  '0xEBCB8B'
-    blue:    '0x81A1C1'
-    magenta: '0xB48EAD'
-    cyan:    '0x8FBCBB'
-    white:   '0xECEFF4'
+    black:   '0x626262'
+    red:     '0xd75f87'
+    green:   '0x87af87'
+    yellow:  '0xffd787'
+    blue:    '0xadd4fb'
+    magenta: '0xffafaf'
+    cyan:    '0x87d7d7'
+    white:   '0xe4e4e4'
+# Colors (Nord)
+#colors:
+#  # Default colors
+#  primary:
+#    background: '0x2E3440'
+#    foreground: '0xD8DEE9'
+#
+#  # Normal colors
+#  normal:
+#    black:   '0x3B4252'
+#    red:     '0xBF616A'
+#    green:   '0xA3BE8C'
+#    yellow:  '0xEBCB8B'
+#    blue:    '0x81A1C1'
+#    magenta: '0xB48EAD'
+#    cyan:    '0x88C0D0'
+#    white:   '0xE5E9F0'
+#
+#  # Bright colors
+#  bright:
+#    black:   '0x4C566A'
+#    red:     '0xBF616A'
+#    green:   '0xA3BE8C'
+#    yellow:  '0xEBCB8B'
+#    blue:    '0x81A1C1'
+#    magenta: '0xB48EAD'
+#    cyan:    '0x8FBCBB'
+#    white:   '0xECEFF4'
   # Indexed Colors
   #
   # The indexed colors include all colors from 16 to 256.
@@ -197,7 +221,7 @@ visual_bell:
   duration: 0
 
 # Background opacity
-background_opacity: 1.0
+background_opacity: 0.9
 
 # Mouse bindings
 #
@@ -225,6 +249,7 @@ mouse:
   # or triple click.
   double_click: { threshold: 300 }
   triple_click: { threshold: 300 }
+  hide_when_typing: false
 
 selection:
   semantic_escape_chars: ",│`|:\"' ()[]{}<>"
@@ -234,19 +259,15 @@ selection:
 
 dynamic_title: true
 
-hide_cursor_when_typing: false
-
 # Cursor style
 #
 # Values for 'cursor_style':
 #   - Block
 #   - Underline
 #   - Beam
-cursor_style: Block
-
-# If this is `true`, the cursor will be rendered as a hollow box when the
-# window is not focused.
-unfocused_hollow_cursor: true
+cursor:
+  style: Block
+  unfocused_follow: true
 
 # Live config reload (changes require restart)
 live_config_reload: true
@@ -346,6 +367,7 @@ key_bindings:
   - { key: End,                     chars: "\x1bOF",   mode: AppCursor   }
   - { key: End,                     chars: "\x1b[F",   mode: ~AppCursor  }
   - { key: Key0,     mods: Command, action: ResetFontSize                }
+  - { key: Key6,     mods: Control, chars: "\x1e"                        } # vim: alternate files
   - { key: Equals,   mods: Command, action: IncreaseFontSize             }
   - { key: Minus,    mods: Command, action: DecreaseFontSize             }
   - { key: K,        mods: Command, action: ClearHistory                 }

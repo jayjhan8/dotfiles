@@ -14,6 +14,8 @@ set backspace=eol,start,indent
 set hlsearch
 set hidden
 set modeline
+set splitright
+set t_Co=256
 
 " ============================================================================
 " }}} BASIC SETTINGS END
@@ -37,6 +39,8 @@ augroup vimrc
 	"au FileType javascript,python,html,css,sh,js,yaml setl sw=4 ts=2 noexpandtab
 	au FileType html,css,vagrant,yaml setl sw=2 ts=2 expandtab
 	au FileType js setl sw=4 ts=4 noexpandtab
+	au FileType jsx setl sw=4 ts=4 noexpandtab
+	au FileType javascript.jsx setl sw=2 ts=2 expandtab
 	au FileType sh setl sw=4 ts=4 expandtab
 	"au FileType cpp setl sw=4 ts=4 noexpandtab
 	au BufNewFile,BufRead *.py setl 
@@ -87,6 +91,8 @@ call plug#begin('~/.vim/plugged')
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim'
+Plug 'junegunn/goyo.vim'
+Plug 'junegunn/limelight.vim'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'christoomey/vim-tmux-navigator'
@@ -114,10 +120,10 @@ Plug 'honza/vim-snippets'
 Plug 'vim-scripts/vimlatex'
 Plug 'vim-scripts/Puppet-Syntax-Highlighting'
 Plug 'vim-scripts/Tabular'
-Plug 'SirVer/ultisnips'
 Plug 'ervandew/supertab'
 Plug 'kchmck/vim-coffee-script'
 Plug 'qpkorr/vim-bufkill', {'on': 'BD'}
+Plug 'vitalk/vim-simple-todo'
 call plug#end()
 " }}} Vim-Plug END
 
@@ -126,7 +132,8 @@ colorscheme seoul256
 " NerdTree Config
 map <C-n> :NERDTreeToggle<CR>
 map <C-g> :NERDTreeFind<CR>
-let NERDTreeShowLineNumbers=1
+let g:NERDTreeShowLineNumbers=1
+let g:NERDTreeWinSize=60
 
 " Tmux config
 let g:tmux_navigator_no_mappings = 1
@@ -144,13 +151,15 @@ let g:tmux_navigator_save_on_switch = 1
 " Buffer Navigation
 nnoremap <silent> [b :bp<cr>
 nnoremap <silent> ]b :bn<cr>
-"nnoremap <leader>x :b#<bar>bd# <cr>
-" Buffer cleanup
 nnoremap <leader>x :BD<CR> "Delete the current buffer without closing out the pane
 
 " Location Navigation
 nnoremap <silent> [l :lprev<cr>
 nnoremap <silent> ]l :lnext<cr>
+
+"  Add today's time stamp!
+nmap <leader>td "=strftime('%a %d %b %Y')<C-M>p
+imap <leader>td <C-R>=strftime('%a %d %b %Y')<C-M>
 
 " Python
 let python_highlight_all = 1
@@ -219,8 +228,11 @@ let g:markdown_enable_spell_checking = 0
 ""let g:syntastic_check_on_wq = 0
 "let g:syntastic_python_checkers = ['pylint']
 
+
 " Fugitive
 let g:fugitive_gitlab_domains = ['https://gitlab-app.eng.qops.net']
+nnoremap <leader>gs  :Gstatus<CR>
+
 
 " Vim command mode
 set wildmode=longest,list,full
@@ -245,16 +257,18 @@ let g:ale_linters = {'python': ['pylint'],
 			\ 'scala':[],
 			\ 'markdown': ['remark_lint', 'alex'],
 			\ 'javascript': ['eslint' ],
-			\  'typescript': ['prettier', 'tslint', 'tsserver', 'typecheck'],
 			\}
-
+			"\  'typescript': ['prettier', 'tslint', 'tsserver', 'typecheck'],
 "let g:ale_javascript_eslint_executable='yarn run eslint:client'
-"let g:ale_javascript_eslint_options='--config .eslintrc.client.json'
+"let g:ale_javascript_eslint_options='--config .eslintrc.client.statsiq.json src/client/statsiq'
 "let g:ale_fixers = {'ruby': ['rubocop']}
 let g:ale_lint_delay = 1000
 let g:ale_cache_executable_check_failures = 1
-nmap ]a <Plug>(ale_next_wrap)
-nmap [a <Plug>(ale_previous_wrap)
+
+
+" TODO: fix this
+nnoremap ]a <Plug>(ale_next_wrap)
+nnoremap [a <Plug>(ale_previous_wrap)
 
 " ----------------------------------------------------------------------------
 " ULTISNIPS
@@ -276,7 +290,7 @@ let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_max_diagnostics_to_display = 10 "let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_autoclose_preview_window_after_insertion=1
 let g:ycm_server_python_interpreter = "/usr/local/bin/python3"
-map <leader>g  :YcmCompleter GoToDefinitionElseDeclaration<CR>
+nnoremap <leader>g  :YcmCompleter GoTo<CR>
 
 "" YCM PYTHON
 let g:ycm_python_binary_path = '/usr/local/bin/python3'
@@ -294,6 +308,36 @@ let g:UltiSnipsExpandTrigger = "<TAB>"
 let g:UltiSnipsJumpForwardTrigger = "<TAB>"
 let g:UltiSnipsJumpBackwardTrigger = "<s-TAB>"
 
+" Goyo
+function! s:goyo_enter()
+  if has('gui_running')
+    set fullscreen
+    set background=light
+    set linespace=7
+  elseif exists('$TMUX')
+    silent !tmux set status off
+  endif
+  Limelight
+  let &l:statusline = '%M'
+  hi StatusLine ctermfg=red guifg=red cterm=NONE gui=NONE
+endfunction
+
+function! s:goyo_leave()
+  if has('gui_running')
+    set nofullscreen
+    set background=dark
+    set linespace=0
+  elseif exists('$TMUX')
+    silent !tmux set status on
+  endif
+  Limelight!
+endfunction
+
+autocmd! User GoyoEnter nested call <SID>goyo_enter()
+autocmd! User GoyoLeave nested call <SID>goyo_leave()
+
+nnoremap <Leader>G :Goyo<CR>
+
 " Profiling
 nnoremap <silent> <leader>PS :exe ":profile start profile.log"<cr>:exe ":profile func *"<cr>:exe ":profile file *"<cr>
 nnoremap <silent> <leader>PP :exe ":profile pause"<cr>
@@ -302,18 +346,20 @@ nnoremap <silent> <leader>PQ :exe ":profile pause"<cr>:noautocmd qall!<cr>
 let g:vim_json_syntax_conceal = 0
 
 "" FZF quickaction
+command! -bang -nargs=? -complete=dir GFiles
+  \ call fzf#vim#gitfiles(<q-args>, fzf#vim#with_preview(), <bang>0)
+
 nnoremap <silent> <expr> <c-p> (expand('%') =~ 'NERD_tree' ?"\<c-w>\<c-w>" : '').":GFiles\<cr>"
-"nnoremap <silent> <Leader>b  :Buffers<CR>
 nnoremap <silent> <Leader><Leader>  :Buffers<CR>
-"nnoremap <silent> <Leader>rg  :Rg
 nnoremap <Leader>rg :Rg<Space>
+nnoremap <silent> <Leader>RG       :Rg <C-R><C-A><CR>
+nnoremap <silent> <Leader>rg       :Rg <C-R><C-W><CR>
+vnoremap <silent> <Leader>rg       y:Rg <C-R>"<CR>
 nnoremap <silent> <Leader>L        :Lines<CR>
 nnoremap <silent> <Leader>`        :Marks<CR>
 
 " look for this word in visual mode
 vnoremap // y/<C-R>"<CR>
-
-
 
 " Always paste with set nopaste in insert mode from system clipboard
 " https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
@@ -327,3 +373,6 @@ function! XTermPasteBegin()
 	set paste
 	return ""
 endfunction
+
+" This needs to be set later, I don't know what is overriding this
+hi Normal ctermbg=NONE guibg=NONE

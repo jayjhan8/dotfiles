@@ -1,3 +1,14 @@
+# GENERAL
+
 * rustup command takes in an input
 * don't download rust when it's there
 * colorscheme not available, need to enter
+
+
+#VIMRC
+
+## ALE 
+
+* not recognizing my .eslintrc in multiple dirs
+
+* Doesn't go to the next wrap [a
