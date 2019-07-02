@@ -38,12 +38,12 @@ augroup vimrc
 	autocmd BufNewFile,BufRead Vagrantfile set filetype=vagrant
 	"au FileType javascript,python,html,css,sh,js,yaml setl sw=4 ts=2 noexpandtab
 	au FileType html,css,vagrant,yaml setl sw=2 ts=2 expandtab
-	au FileType js setl sw=4 ts=4 noexpandtab
+	au FileType js setl sw=2 ts=2 expandtab
 	au FileType jsx setl sw=4 ts=4 noexpandtab
 	au FileType javascript.jsx setl sw=2 ts=2 expandtab
 	au FileType sh setl sw=4 ts=4 expandtab
 	"au FileType cpp setl sw=4 ts=4 noexpandtab
-	au BufNewFile,BufRead *.py setl 
+	au BufNewFile,BufRead *.py setl
 				\ tabstop=4
 				\ softtabstop=4
 				\ shiftwidth=4
@@ -93,6 +93,7 @@ Plug 'junegunn/fzf.vim'
 Plug 'junegunn/gv.vim'
 Plug 'junegunn/goyo.vim'
 Plug 'junegunn/limelight.vim'
+Plug 'junegunn/vim-peekaboo'
 Plug 'scrooloose/nerdtree'
 Plug 'scrooloose/nerdcommenter'
 Plug 'christoomey/vim-tmux-navigator'
@@ -104,6 +105,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
 Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
+" TODO: am I usign this?
 Plug 'nvie/vim-flake8'
 Plug 'tpope/vim-fugitive'
 Plug 'vim-scripts/vimux'
@@ -252,7 +254,7 @@ endif
 " ----------------------------------------------------------------------------
 " ALE
 " ----------------------------------------------------------------------------
-let g:ale_linters = {'python': ['pylint'], 
+let g:ale_linters = {'python': ['pylint', 'flake8'],
 			\ 'yaml': ['yamllint'],
 			\ 'scala':[],
 			\ 'markdown': ['remark_lint', 'alex'],
@@ -265,10 +267,8 @@ let g:ale_linters = {'python': ['pylint'],
 let g:ale_lint_delay = 1000
 let g:ale_cache_executable_check_failures = 1
 
-
-" TODO: fix this
-nnoremap ]a <Plug>(ale_next_wrap)
-nnoremap [a <Plug>(ale_previous_wrap)
+nmap ]a <Plug>(ale_next_wrap)
+nmap [a <Plug>(ale_previous_wrap)
 
 " ----------------------------------------------------------------------------
 " ULTISNIPS
@@ -363,15 +363,26 @@ vnoremap // y/<C-R>"<CR>
 
 " Always paste with set nopaste in insert mode from system clipboard
 " https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
+function! WrapForTmux(s)
+  if !exists('$TMUX')
+          return a:s
+  endif
+
+  let tmux_start = "\<Esc>Ptmux;"
+  let tmux_end = "\<Esc>\\"
+
+  return tmux_start . substitute(a:s, "\<Esc>", "\<Esc>\<Esc>", 'g') . tmux_end
+endfunction
+
 let &t_SI .= "\<Esc>[?2004h"
 let &t_EI .= "\<Esc>[?2004l"
 
 inoremap <special> <expr> <Esc>[200~ XTermPasteBegin()
 
 function! XTermPasteBegin()
-	set pastetoggle=<Esc>[201~
-	set paste
-	return ""
+  set pastetoggle=<Esc>[201~
+  set paste
+  return ""
 endfunction
 
 " This needs to be set later, I don't know what is overriding this
