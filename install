@@ -37,7 +37,7 @@ if [ "$(uname -s)" = 'Darwin' ]; then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
   echo "--Homebrewing"
-  brew cask install sequel-pro alacritty
+  brew cask install sequel-pro alacritty slack dropbox
 
   brew install \
     shellcheck s3cmd docker-compose docker fd ripgrep \

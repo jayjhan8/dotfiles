@@ -134,6 +134,9 @@ colorscheme seoul256
 " NerdTree Config
 map <C-n> :NERDTreeToggle<CR>
 map <C-g> :NERDTreeFind<CR>
+nnoremap <silent> <Leader>e        :e %:h<CR>
+let g:NERDTreeHijackNetrw=1
+let g:NERDTreeMinimalUI=1
 let g:NERDTreeShowLineNumbers=1
 let g:NERDTreeWinSize=60
 
