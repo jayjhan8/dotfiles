@@ -17,28 +17,31 @@ jobscount() {
 }
 
 alias ls='ls -GFh'
-alias ops='cd /Users/jayh/proj/ops'
+alias ops='cd $HOME/work/ops'
 alias kwm='/usr/local/opt/kwm/kwm'
-alias proj='cd /Users/jayh/proj'
-alias sw='cd /Users/jayh/proj/statwing/swproxy'
-alias tst='cd /Users/jayh/tst'
-alias interviews='cd /Users/jayh/tst/interviews'
+alias work='cd $HOME/work'
+alias sw='cd $HOME/work/statwing/swproxy'
+alias tst='cd $HOME/tst'
+alias interviews='cd $HOME/interviews'
 alias drive='cd /Volumes/My\ Passport'
 alias chrome='open -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias useful='open -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome ~/useful.md'
-echo 'coffee dude coffee'
+echo '1%'
 
 # FZF 
 #[ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 #PS1="\[\033[31m\]\u:\[\033[36m\]\w\[\033[35m\]\$(parse_git_branch)\[\033[m\]\$(jobscount)$ "
 #export PS1
-PS1="${PS1}$(jobscount)"
-export PS1
+
+#PS1="${PS1}$(jobscount)"
+#export PS1
 
 export GOPATH="$HOME/go"
 #export GOROOT="$HOME/Go"
-export PATH=$PATH:$GOPATH/bin
+export PATH=$PATH:$GOPATH/bin:$HOME/bin:/usr/local/bin:/usr/local/opt
+
+export NVM_DIR=$HOME/.nvm
 
 # Qualtrics Specific
-source /Users/jayh/.qualtrics_profile
+source $HOME/.qualtrics_profile
