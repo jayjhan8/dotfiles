@@ -13,6 +13,14 @@ export NVM_LAZY_LOAD=true
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 ZSH_THEME="minimal"
 
+# ZPLUG
+export ZPLUG_HOME=/usr/local/opt/zplug
+source $ZPLUG_HOME/init.zsh
+
+zplug "lukechilds/zsh-nvm"
+
+zplug load
+
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
 # a theme from this variable instead of looking in ~/.oh-my-zsh/themes/
@@ -69,7 +77,6 @@ plugins=(
   git
   docker
   git-flow
-  zsh-nvm
   npm
   osx
   docker-compose
