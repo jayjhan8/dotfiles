@@ -15,6 +15,7 @@ set hlsearch
 set hidden
 set modeline
 set splitright
+set relativenumber
 set t_Co=256
 
 " ============================================================================
@@ -78,7 +79,7 @@ function! BuildYCM(info)
 	" - status: 'installed', 'updated', or 'unchanged'  
 	" - force:  set on PlugInstall! or PlugUpdate!  
 	if a:info.status == 'installed' || a:info.force
-		!/usr/local/bin/python3 install.py --gocode-completer
+		!/usr/local/bin/python3 install.py --gocode-completer --ts-completer
 	endif
 endfunction
 " ============================================================================
@@ -118,27 +119,36 @@ Plug 'vim-scripts/unimpaired.vim'
 Plug 'vim-scripts/pydoc.vim'
 Plug 'vim-scripts/virtualenv.vim'
 Plug 'vim-scripts/SimpylFold'
+Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vim-scripts/vimlatex'
 Plug 'vim-scripts/Puppet-Syntax-Highlighting'
 Plug 'vim-scripts/Tabular'
 Plug 'ervandew/supertab'
 Plug 'kchmck/vim-coffee-script'
-Plug 'qpkorr/vim-bufkill', {'on': 'BD'}
+Plug 'qpkorr/vim-bufkill'
 Plug 'vitalk/vim-simple-todo'
 call plug#end()
 " }}} Vim-Plug END
-
 
 colorscheme seoul256
 " NerdTree Config
 map <C-n> :NERDTreeToggle<CR>
 map <C-g> :NERDTreeFind<CR>
-nnoremap <silent> <Leader>e        :e %:h<CR>
+nnoremap <silent> <Leader>e        :call SyncNetrw()<CR>
 let g:NERDTreeHijackNetrw=1
 let g:NERDTreeMinimalUI=1
 let g:NERDTreeShowLineNumbers=1
 let g:NERDTreeWinSize=60
+
+function SyncNetrw()
+  if &modifiable && strlen(expand('%')) > 0 && !&diff
+    let l:fileName = expand('%:t')
+    let l:fileDir = expand('%:h')
+    execute 'edit' fileDir
+    execute "normal /".fileName."\<CR>"
+  endif
+endfunction
 
 " Tmux config
 let g:tmux_navigator_no_mappings = 1
@@ -156,7 +166,7 @@ let g:tmux_navigator_save_on_switch = 1
 " Buffer Navigation
 nnoremap <silent> [b :bp<cr>
 nnoremap <silent> ]b :bn<cr>
-nnoremap <leader>x :BD<CR> "Delete the current buffer without closing out the pane
+nnoremap <leader>bd :BD<CR> "Delete the current buffer without closing out the pane
 
 " Location Navigation
 nnoremap <silent> [l :lprev<cr>
@@ -269,6 +279,8 @@ let g:ale_linters = {'python': ['pylint', 'flake8'],
 "let g:ale_fixers = {'ruby': ['rubocop']}
 let g:ale_lint_delay = 1000
 let g:ale_cache_executable_check_failures = 1
+let g:ale_python_pylint_auto_pipenv = 1
+let g:ale_python_pylint_use_global = 1
 
 nmap ]a <Plug>(ale_next_wrap)
 nmap [a <Plug>(ale_previous_wrap)
@@ -363,6 +375,13 @@ nnoremap <silent> <Leader>`        :Marks<CR>
 
 " look for this word in visual mode
 vnoremap // y/<C-R>"<CR>
+
+" Help!
+nnoremap <Leader>ht :Helptags<CR>
+
+" Ultisnips
+nnoremap <Leader>ue :UltiSnipsEdit<space>
+
 
 " Always paste with set nopaste in insert mode from system clipboard
 " https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode

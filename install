@@ -37,12 +37,14 @@ if [ "$(uname -s)" = 'Darwin' ]; then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
   echo "--Homebrewing"
-  brew cask install sequel-pro alacritty slack dropbox
+  brew cask install sequel-pro alacritty slack dropbox spectacle docker dash
 
   brew install \
-    shellcheck s3cmd docker-compose docker fd ripgrep \
-    git tree vim wget zsh jq python python3 go htop nvm \
-    reattach-to-user-namespace
+    shellcheck s3cmd docker-compose docker fd ripgrep tmux tmux-xpanes\
+    node git tree vim wget jq python python3 go htop nvm \
+    zsh zplug \
+    #reattach-to-user-namespace \ # This is not required after tmux 2.6!  Needed to remap things before
+    cmake # for YCM
 fi
 
 
@@ -62,6 +64,10 @@ cd fonts || exit
 ./install.sh
 cd .. || exit
 rm -rf fonts
+
+# setup NVM
+mkdir "$HOME/.nvm"
+source $(brew --prefix nvm)/nvm.sh
 
 tmux source-file ~/.tmux.conf
 ./install-alacritty
