@@ -20,13 +20,12 @@ alias ls='ls -GFh'
 alias ops='cd $HOME/work/ops'
 alias kwm='/usr/local/opt/kwm/kwm'
 alias work='cd $HOME/work'
-alias sw='cd $HOME/work/statwing/swproxy'
 alias tst='cd $HOME/tst'
 alias interviews='cd $HOME/interviews'
 alias drive='cd /Volumes/My\ Passport'
 alias chrome='open -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome'
 alias useful='open -a /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome ~/useful.md'
-echo '1%'
+echo '1%.  You are remembered for the rules you break.'
 
 # FZF 
 #[ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -39,7 +38,12 @@ echo '1%'
 
 export GOPATH="$HOME/go"
 #export GOROOT="$HOME/Go"
-export PATH=$PATH:$GOPATH/bin:$HOME/bin:/usr/local/bin:/usr/local/opt
+export PATH=$PATH:$GOPATH/bin:$HOME/bin:/usr/local/bin:/usr/local/opt:$HOME/.jenv/bin
+
+# Android SDK
+export PATH=$PATH:$HOME/Library/Android/sdk/platform-tools
+
+eval "$(jenv init -)"
 
 export NVM_DIR=$HOME/.nvm
 

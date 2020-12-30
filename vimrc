@@ -16,7 +16,7 @@ set hidden
 set modeline
 set splitright
 set relativenumber
-set t_Co=256
+"set t_Co=256
 
 " ============================================================================
 " }}} BASIC SETTINGS END
@@ -39,10 +39,11 @@ augroup vimrc
 	autocmd BufNewFile,BufRead Vagrantfile set filetype=vagrant
 	"au FileType javascript,python,html,css,sh,js,yaml setl sw=4 ts=2 noexpandtab
 	au FileType html,css,vagrant,yaml setl sw=2 ts=2 expandtab
-	au FileType js setl sw=2 ts=2 expandtab
-	au FileType jsx setl sw=4 ts=4 noexpandtab
+	au FileType js setl sw=2 ts=2 expandtab path=.,src,client,node_modules suffixesadd=.js,.jsx,.ts,.tsx
 	au FileType javascript.jsx setl sw=2 ts=2 expandtab
 	au FileType sh setl sw=4 ts=4 expandtab
+	autocmd FileType javascriptreact,typescriptreact set sw=2 ts=2 expandtab path=.,src,client,node_modules suffixesadd=.js,.jsx,.ts,.tsx
+	autocmd FileType set sw=2 ts=2 expandtab path=.,src,client,node_modules suffixesadd=.js,.jsx,.ts,.tsx
 	"au FileType cpp setl sw=4 ts=4 noexpandtab
 	au BufNewFile,BufRead *.py setl
 				\ tabstop=4
@@ -58,7 +59,7 @@ augroup vimrc
 
 
 	"" Reload .vimrc after editing and saving
-	autocmd bufwritepost .vimrc source $MYVIMRC
+	autocmd BufWritePost .vimrc source $MYVIMRC
 augroup END
 "endif
 
@@ -79,7 +80,7 @@ function! BuildYCM(info)
 	" - status: 'installed', 'updated', or 'unchanged'  
 	" - force:  set on PlugInstall! or PlugUpdate!  
 	if a:info.status == 'installed' || a:info.force
-		!/usr/local/bin/python3 install.py --gocode-completer --ts-completer
+		!/usr/bin/python3 install.py --gocode-completer --ts-completer
 	endif
 endfunction
 " ============================================================================
@@ -100,20 +101,23 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'vim-scripts/surround.vim'
 Plug 'pangloss/vim-javascript'
-Plug 'mxw/vim-jsx'
+Plug 'leafgarland/typescript-vim' "TypeScript syntax
+Plug 'maxmellon/vim-jsx-pretty'   "JS and JSX syntax
 Plug 'elzr/vim-json'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-" TODO: am I usign this?
-Plug 'nvie/vim-flake8'
+"Plug 'ycm-core/YouCompleteMe', { 'do': function('BuildYCM') }
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'scalameta/coc-metals', {'do': 'yarn install --frozen-lockfile'}
+Plug 'derekwyatt/vim-scala'
 Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-repeat' "Use Tpope's goodies and repeat
 Plug 'vim-scripts/vimux'
 Plug 'shumphrey/fugitive-gitlab.vim'
 Plug 'fatih/vim-go'
 Plug 'junegunn/seoul256.vim'
-Plug 'w0rp/ale'
+Plug 'dense-analysis/ale', { 'on':  'ALEToggle' }
 Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'vim-scripts/unimpaired.vim'
 Plug 'vim-scripts/pydoc.vim'
@@ -131,7 +135,6 @@ Plug 'vitalk/vim-simple-todo'
 call plug#end()
 " }}} Vim-Plug END
 
-colorscheme seoul256
 " NerdTree Config
 map <C-n> :NERDTreeToggle<CR>
 map <C-g> :NERDTreeFind<CR>
@@ -140,6 +143,10 @@ let g:NERDTreeHijackNetrw=1
 let g:NERDTreeMinimalUI=1
 let g:NERDTreeShowLineNumbers=1
 let g:NERDTreeWinSize=60
+
+" NerdCommenter
+let g:NERDSpaceDelims = 1
+
 
 function SyncNetrw()
   if &modifiable && strlen(expand('%')) > 0 && !&diff
@@ -152,10 +159,6 @@ endfunction
 
 " Tmux config
 let g:tmux_navigator_no_mappings = 1
-"augroup vimrc
-    "autocmd!
-    ""au VimEnter * nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
-"augroup END
 nnoremap <silent> <c-j> :TmuxNavigateDown<cr>
 nnoremap <silent> <c-h> :TmuxNavigateLeft<cr>
 nnoremap <silent> <c-k> :TmuxNavigateUp<cr>
@@ -206,21 +209,6 @@ set laststatus=2
 let g:airline#extensions#ale#enabled = 1
 let g:airline_highlighting_cache = 1
 
-" Colors for Solarized Darcula
-"hi LineNr ctermfg=239 ctermbg=236
-"hi Folded ctermfg=144 ctermbg=17
-""hi CursorLine
-"set cursorline
-"hi clear cursorline
-"hi CursorLineNr cterm=bold ctermfg=255 ctermbg=13
-
-
-" RIPGREP
-"if executable('rg')
-    "let g:ackprg = 'rg -s --vimgrep --type-add=tags:tags --type-not tags'
-    "let g:ctrlp_user_command = 'rg -u --files %s'
-"endif
-
 " Vimux
 map <leader>vp :VimuxPromptCommand<CR>
 map <leader>vl :VimuxRunLastCommand<CR>
@@ -232,22 +220,18 @@ let g:SimpylFold_docstring_preview = 1
 let g:markdown_enable_folding = 0
 let g:markdown_enable_spell_checking = 0
 
-" Syntastic
-"set statusline+=%#warningmsg#
-"set statusline+=%{SyntasticStatuslineFlag()}
-"set statusline+=%*
-
-"let g:syntastic_always_populate_loc_list = 1
-""let g:syntastic_auto_loc_list = 1
-""let g:syntastic_check_on_open = 1
-""let g:syntastic_check_on_wq = 0
-"let g:syntastic_python_checkers = ['pylint']
-
-
 " Fugitive
 let g:fugitive_gitlab_domains = ['https://gitlab-app.eng.qops.net']
 nnoremap <leader>gs  :Gstatus<CR>
-
+function! s:close_gstatus()
+	for l:winnr in range(1, winnr('$'))
+		if !empty(getwinvar(l:winnr, 'fugitive_status'))
+			execute l:winnr.'close'
+		endif
+	endfor
+endfunction
+command! GstatusClose call s:close_gstatus()
+nnoremap <leader>gq  :GstatusClose<CR>
 
 " Vim command mode
 set wildmode=longest,list,full
@@ -263,24 +247,29 @@ if has('gui_running')
 else
 	silent! colo seoul256
 endif
+let g:seoul256_background = 238
+colorscheme seoul256
 
 " ----------------------------------------------------------------------------
 " ALE
 " ----------------------------------------------------------------------------
 let g:ale_linters = {'python': ['pylint', 'flake8'],
 			\ 'yaml': ['yamllint'],
-			\ 'scala':[],
+			\ 'scala':['metals'],
 			\ 'markdown': ['remark_lint', 'alex'],
-			\ 'javascript': ['eslint' ],
 			\}
+			"\ 'javascript': ['eslint' ], "coc-eslint now
 			"\  'typescript': ['prettier', 'tslint', 'tsserver', 'typecheck'],
 "let g:ale_javascript_eslint_executable='yarn run eslint:client'
 "let g:ale_javascript_eslint_options='--config .eslintrc.client.statsiq.json src/client/statsiq'
 "let g:ale_fixers = {'ruby': ['rubocop']}
 let g:ale_lint_delay = 1000
 let g:ale_cache_executable_check_failures = 1
-let g:ale_python_pylint_auto_pipenv = 1
-let g:ale_python_pylint_use_global = 1
+"let g:ale_python_pylint_auto_pipenv = 1
+" With statwing-etl/venv, these are set to be some odd venv settings like
+" VIRTUAL_ENV='home/default/src', so stepping through local venv with venv-osx
+let g:ale_python_pylint_use_global = 0
+let g:ale_virtualenv_dir_names = ['venv-osx']
 
 nmap ]a <Plug>(ale_next_wrap)
 nmap [a <Plug>(ale_previous_wrap)
@@ -296,19 +285,36 @@ nmap [a <Plug>(ale_previous_wrap)
 
 " If you want :UltiSnipsEdit to split your window.
 let g:UltiSnipsEditSplit="vertical"
-let g:ultisnips_python_style='numpy'
+"let g:ultisnips_python_style='numpy' #Don't need this, right?
+let g:UltiSnipsSnippetDirectories=[$HOME.'/dotfiles/snippets']
+nnoremap <Leader>ue :UltiSnipsEdit<cr>
 
-" YCM
+"COC
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+
+" TODO: YCM delete
 let g:ycm_show_diagnostics_ui = 1
 let g:ycm_enable_diagnostic_signs = 0 
 let g:ycm_enable_diagnostic_highlighting = 0
 let g:ycm_max_diagnostics_to_display = 10 "let g:ycm_autoclose_preview_window_after_completion=1
 let g:ycm_autoclose_preview_window_after_insertion=1
-let g:ycm_server_python_interpreter = "/usr/local/bin/python3"
-nnoremap <leader>g  :YcmCompleter GoTo<CR>
+let g:ycm_server_python_interpreter = "/usr/bin/python3"
 
 "" YCM PYTHON
-let g:ycm_python_binary_path = '/usr/local/bin/python3'
+let g:ycm_python_binary_path = '/usr/bin/python3'
 
 " SuperTab
 let g:SuperTabDefaultCompletionType = "<C-n>"
@@ -379,10 +385,6 @@ vnoremap // y/<C-R>"<CR>
 " Help!
 nnoremap <Leader>ht :Helptags<CR>
 
-" Ultisnips
-nnoremap <Leader>ue :UltiSnipsEdit<space>
-
-
 " Always paste with set nopaste in insert mode from system clipboard
 " https://coderwall.com/p/if9mda/automatically-set-paste-mode-in-vim-when-pasting-in-insert-mode
 function! WrapForTmux(s)
@@ -406,6 +408,3 @@ function! XTermPasteBegin()
   set paste
   return ""
 endfunction
-
-" This needs to be set later, I don't know what is overriding this
-hi Normal ctermbg=NONE guibg=NONE

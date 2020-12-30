@@ -3,6 +3,8 @@
 * rustup command takes in an input
 * don't download rust when it's there
 * colorscheme not available, need to enter
+* Alacritty term info extraction.. https://github.com/jwilm/alacritty/blob/master/INSTALL.md#terminfo
+* Ultisnips sync
 
 
 #VIMRC
