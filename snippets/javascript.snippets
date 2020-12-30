@@ -1,0 +1,62 @@
+snippet cv "console.log verbose" b
+console.log(JSON.stringify(${0:variable}, null, 2));
+endsnippet
+
+snippet cl "console.log"
+console.log(${0});
+endsnippet
+
+
+# ~/.vim/plugged/vim-snippets/snippets/javascript/javascript.snippets
+
+snippet /**
+	/**
+	 * ${0:description}
+	 */
+endsnippet
+
+snippet @par
+@param {${1:type}} ${2:name} ${0:description}
+endsnippet
+
+snippet @ret
+@return {${1:type}} ${0:description}
+endsnippet
+
+# Function
+snippet fun "function"
+function ${1:function_name}(${2}) {
+	${0:${VISUAL}}
+}
+endsnippet
+
+# Asynchronous Function
+snippet asf "async function"
+async function ${1:function_name}(${2}) {
+	${0:${VISUAL}}
+}
+endsnippet
+
+snippet af
+(${1}) => {
+	${0:${VISUAL}}
+}
+endsnippet
+
+snippet ed
+export default ${0}
+endsnippet
+
+# Testing ~/.vim/plugged/vim-snippets/snippets/javascript/javascript-jasmine.snippets
+
+snippet des "Describe (js)"
+describe('${1:description}', function() {
+	$0
+})
+endsnippet
+
+snippet it "it (js)"
+it('${1:description}', function() {
+	$0
+})
+endsnippet
