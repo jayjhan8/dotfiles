@@ -8,7 +8,7 @@ BASE=$(pwd)
 # for manually linking all RCs:
 # what is this?  does this actually work?
 : '
-for rc in tmux.conf gitconfig bash_profile bashrc zshrc alacritty.yml vimrc; do
+for rc in tmux.conf gitconfig bash_profile bashrc zshrc alacritty.yml vimrc zshrc; do
   mkdir -pv backup
   [ -e ~/."$rc" ] && mv -v ~/."$rc" backup/."$rc"
   ln -sfv "$(pwd)/$rc" ~/."$rc"
@@ -37,13 +37,12 @@ if [ "$(uname -s)" = 'Darwin' ]; then
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
   echo "--Homebrewing"
-  brew cask install sequel-pro alacritty slack dropbox spectacle docker dash
+  brew install --cask alacritty slack dropbox spectacle docker dash notion
 
   brew install \
-    shellcheck s3cmd docker-compose docker fd ripgrep tmux tmux-xpanes\
+    shellcheck docker-compose docker fd ripgrep tmux tmux-xpanes\
     node git tree vim wget jq python python3 go htop nvm \
     zsh zplug \
-    #reattach-to-user-namespace \ # This is not required after tmux 2.6!  Needed to remap things before
     cmake # for YCM
 fi
 

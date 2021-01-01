@@ -37,7 +37,6 @@ echo '1%.  You are remembered for the rules you break.'
 #export PS1
 
 export GOPATH="$HOME/go"
-#export GOROOT="$HOME/Go"
 export PATH=$PATH:$GOPATH/bin:$HOME/bin:/usr/local/bin:/usr/local/opt:$HOME/.jenv/bin
 
 # Android SDK

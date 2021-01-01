@@ -16,7 +16,6 @@ set hidden
 set modeline
 set splitright
 set relativenumber
-"set t_Co=256
 
 " ============================================================================
 " }}} BASIC SETTINGS END
@@ -29,7 +28,6 @@ set relativenumber
 " ============================================================================
 " AUTOCMD {{{
 " ============================================================================
-"if has("autocmd")
 augroup vimrc
 	autocmd!
 	autocmd BufNewFile,BufRead *.html set filetype=html
@@ -61,18 +59,15 @@ augroup vimrc
 	"" Reload .vimrc after editing and saving
 	autocmd BufWritePost .vimrc source $MYVIMRC
 augroup END
-"endif
 
 " }}} AUTOCMD END
 
 " Install Vim-Plug
-if empty(glob('~/.vim/autoload/plug.vim'))
-	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
-				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
-endif
-
-
+" if empty(glob('~/.vim/autoload/plug.vim'))
+" 	silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+" 				\ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+" 	autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+" endif
 
 function! BuildYCM(info)
 	" info is a dictionary with 3 fields  
@@ -86,7 +81,7 @@ endfunction
 " ============================================================================
 " Vim-Plug {{{
 " ============================================================================
-se nocompatible              " be iMproved, requmred
+set nocompatible              " be iMproved, requmred
 
 " set the runtime path to include Vundle and initialize
 call plug#begin('~/.vim/plugged')
@@ -127,8 +122,8 @@ Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 Plug 'vim-scripts/vimlatex'
 Plug 'vim-scripts/Puppet-Syntax-Highlighting'
-Plug 'vim-scripts/Tabular'
-Plug 'ervandew/supertab'
+"Plug 'vim-scripts/Tabular'
+"Plug 'ervandew/supertab'
 Plug 'kchmck/vim-coffee-script'
 Plug 'qpkorr/vim-bufkill'
 Plug 'vitalk/vim-simple-todo'
@@ -147,8 +142,7 @@ let g:NERDTreeWinSize=60
 " NerdCommenter
 let g:NERDSpaceDelims = 1
 
-
-function SyncNetrw()
+function! SyncNetrw()
   if &modifiable && strlen(expand('%')) > 0 && !&diff
     let l:fileName = expand('%:t')
     let l:fileDir = expand('%:h')
